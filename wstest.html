@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ws Test</title>
+    <script>
+        var ws = new WebSocket('ws://localhost:33333');
+        ws.onopen = function() {
+            console.log('Connected');
+            ws.send('Hello Server');
+        };
+        ws.onmessage = function(e) {
+            console.log('Message: ' + e.data);
+        };
+        ws.onclose = function() {
+            console.log('Disconnected');
+        };
+    </script>
+</head>
+<body>
+    <h1>Open Console</h1>
+</body>
+</html>
