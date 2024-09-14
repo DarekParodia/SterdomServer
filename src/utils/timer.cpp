@@ -18,6 +18,16 @@ void timer::reset()
     start_time = std::chrono::high_resolution_clock::now();
 }
 
+void timer::runInterval(uint interval, void (*callback)())
+{
+    double elapsed_time = elapsed();
+    if (elapsed_time >= interval)
+    {
+        callback();
+        reset();
+    }
+}
+
 double timer::elapsed() const
 {
     return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - start_time).count();

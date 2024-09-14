@@ -4,12 +4,14 @@
 #include "utils/config.h"
 #include "utils/general.h"
 #include "utils/logger.h"
+#include "data/updater.h"
 #include "settings.h"
 #include "network/connection_handler.h"
 
 void sigint_handler(int sig) {
     logger.warning("Caught SIGINT, stopping server...");
     network::stop_server();
+    data::stopUpdater();
     exit(0);
 }
 
@@ -28,12 +30,16 @@ int main(int argc, char **argv) {
     // init config file
     config.init();
 
+    // start data updater
+    data::startUpdater();
+
     // setup server
     network::server_setup();
 
     // start server
     network::start_server();
 
-    pause();
+
+
     return 0;
 }

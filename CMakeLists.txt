@@ -21,8 +21,13 @@ include_directories(
 find_package(websocketpp REQUIRED)
 include_directories(${WEBSOCKETPP_INCLUDE_DIR})
 
+# nlohmann_json
 find_package(nlohmann_json 3.2.0 REQUIRED)
 include_directories(${NLOHMANN_JSON_INCLUDE_DIR})
+
+# curl
+find_package(CURL REQUIRED)
+include_directories(${CURL_INCLUDE_DIR})
 
 file(GLOB_RECURSE SOURCE_FILES ${SrcDIR}/*.cpp ${SrcDIR}/*.c ${SrcDIR}/**/*.cpp ${SrcDIR}/**/*.c)
 file(GLOB_RECURSE HEADER_FILES ${SrcDIR}/*.h ${SrcDIR}/*.hpp ${SrcDIR}/**/*.h ${SrcDIR}/**/*.hpp)
@@ -37,6 +42,9 @@ target_link_libraries(sterdomserver ${WEBSOCKETPP_LIBRARY})
 
 # nlohmann_json
 target_link_libraries(sterdomserver ${NLOHMANN_JSON_LIBRARY})
+
+# curl
+target_link_libraries(sterdomserver ${CURL_LIBRARY})
 
 
 install(TARGETS sterdomserver DESTINATION ${CMAKE_INSTALL_BINDIR})
