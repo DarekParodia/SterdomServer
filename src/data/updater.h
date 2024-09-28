@@ -17,6 +17,8 @@ namespace data{
     void startUpdater();
     void stopUpdater();
     void resendLastMessages();
+    void unpauseUpdater();
+    void pauseUpdater();
 }
 
 #endif //UPDATER_H

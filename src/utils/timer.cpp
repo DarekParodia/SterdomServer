@@ -1,5 +1,7 @@
 #include "timer.h"
 
+#include <thread>
+
 timer program_timer;
 
 timer::timer()
@@ -20,12 +22,8 @@ void timer::reset()
 
 void timer::runInterval(uint interval, void (*callback)())
 {
-    double elapsed_time = elapsed();
-    if (elapsed_time >= interval)
-    {
-        callback();
-        reset();
-    }
+    std::this_thread::sleep_for(std::chrono::seconds(interval));
+    callback();
 }
 
 double timer::elapsed() const

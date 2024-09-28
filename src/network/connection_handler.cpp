@@ -36,6 +36,7 @@ namespace network
     {
         // Add connection
         connections.push_back(new Connection(hdl));
+        data::unpauseUpdater();
         logger.debug("Adding connection, " + std::to_string(connections.size()) + " to connections");
     }
 
@@ -49,6 +50,10 @@ namespace network
                 connections.erase(connections.begin() + i);
                 break;
             }
+        }
+
+        if (!canSendMessages()) {
+            data::pauseUpdater();
         }
 
         logger.debug("Removing connection, " + std::to_string(connections.size()) + " to connections");

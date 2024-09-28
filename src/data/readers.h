@@ -11,7 +11,7 @@
 #include "settings.h"
 
 namespace data {
-    class TemperatureReader : public ReaderBase{
+    class TemperatureReader : public ReaderBase {
     public:
         TemperatureReader(std::string serverUrl);
         ~TemperatureReader();

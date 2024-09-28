@@ -13,22 +13,9 @@ namespace data{
             ReaderBase() = default;
             ~ReaderBase() = default;
             virtual void update() = 0;
-            inline void addMessageCallback(void (*callback)(network::message)){
-                this->messageCallback = callback;
-            };
-            inline network::message getLastMessage() {
-                return this->lastMessage;
-            };
-            inline void resendLastMessage(){
-                try {
-                    if (this->lastMessage.data.empty()){
-                        return;
-                    }
-                    this->messageCallback(this->lastMessage);
-                } catch (std::exception &e) {
-                    logger.error(e.what());
-                }
-            };
+            void addMessageCallback(void (*callback)(network::message msg));
+            network::message getLastMessage();
+            void resendLastMessage();
            protected:
             void (*messageCallback)(network::message) = &network::addMessage;
             network::message lastMessage;

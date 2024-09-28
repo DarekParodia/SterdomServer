@@ -11,7 +11,7 @@ public:
     timer();
     void start();
     void reset();
-    void runInterval(uint interval, void (*callback)());
+    static void runInterval(uint interval, void (*callback)());
     double elapsed() const;
     std::string elapsed_str() const;
 
