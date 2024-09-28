@@ -3,21 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <title>Ws Test</title>
+<!--    <meta name="viewport" content="width=device-width">-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script>
-        var ws = new WebSocket('ws://localhost:33333');
-        ws.onopen = function() {
+        var ws = new WebSocket('ws://192.168.1.207:33333');
+        var temp1 = 0;
+        var temp2 = 0;
+
+        ws.onopen = function () {
             console.log('Connected');
-            ws.send('Hello Server');
+            // ws.send('Hello Server');
         };
-        ws.onmessage = function(e) {
-            console.log('Message: ' + e.data);
+        ws.onmessage = function (e) {
+            // console.log('Message: ' + e.data);
+            try {
+                var data = JSON.parse(e.data);
+                data = JSON.parse(data[0].data);
+                temp1 = data[0];
+                temp2 = data[1];
+                temp1 = temp1.toFixed(2);
+                temp2 = temp2.toFixed(2);
+                console.log("temp1: " + temp1 + " temp2: " + temp2);
+                $('#co').text(temp1);
+                $('#cwu').text(temp2);
+
+            } catch (e) {
+                console.log("Error: " + e);
+            }
         };
-        ws.onclose = function() {
+        ws.onclose = function () {
             console.log('Disconnected');
         };
     </script>
+    <style>
+        body {
+            background-color: #000000
+        }
+
+        .padding {
+            padding: 10rem !important;
+        }
+
+        .card-no-border .card {
+            border-color: #d7dfe3;
+            border-radius: 4px;
+            -webkit-box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.05)
+        }
+
+        .card-img-overlay {
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 1.25rem
+        }
+
+        html body .dl {
+            display: inline-block
+        }
+
+        .text-white {
+            color: #ffffff !important
+        }
+
+        .font-light {
+            font-weight: 300
+        }
+
+        .card-text:last-child {
+            margin-bottom: 0
+        }
+
+        .card-body {
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            padding: 1.25rem
+        }
+
+        .b-r {
+            border-right: 1px solid rgba(120, 130, 140, 0.13)
+        }
+
+        .text-info {
+            color: #1e88e5 !important
+        }
+
+        .display-6 {
+            font-size: 36px
+        }
+
+        .mdi {
+            display: inline-block;
+            font-family: 'weathericons';
+            font-style: normal;
+            font-weight: normal;
+            line-height: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale
+        }
+
+        .m-l-20 {
+            margin-left: 20px
+        }
+
+        .m-b-0 {
+            margin-bottom: 0px
+        }
+
+        small {
+            font-size: 80%;
+            font-weight: 400
+        }
+    </style>
 </head>
 <body>
-    <h1>Open Console</h1>
+<div class="padding">
+    <div class="col-lg-6">
+        <div class="card">
+<!--            <div class="card-img-overlay" style="height:110px;">-->
+<!--                <h3 class="card-title text-white m-b-0 dl">New Delhi</h3> <small class="card-text text-white font-light">Sunday 15 march</small>-->
+<!--            </div>-->
+            <div class="card-body weather-small">
+                <div class="row">
+                    <div class="col-8 b-r align-self-center">
+                        <div class="d-flex">
+                            <div class="display-6 text-info"><i class="mdi mdi-weather-pouring"></i></div>
+                            <div class="m-l-20">
+                                <h1 class="font-light text-info m-b-0"><span id="co">32</span><sup>0</sup></h1> <small>CO</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-4 text-center">
+                        <h1 class="font-light m-b-0"><span id="cwu">25</span><sup>0</sup></h1> <small>CWU</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
