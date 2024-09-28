@@ -13,6 +13,25 @@ namespace network
     std::thread update_thread;
     bool stopThread = false;
 
+    std::mutex update_mutex;
+    std::condition_variable update_cv;
+    bool update_mtx_ready = false;
+
+    void update_thread_function()
+    {
+        logger.debug("update thread started");
+        while (!stopThread)
+        {
+            logger.debug("mutex waiting");
+            std::unique_lock<std::mutex> lock(update_mutex);
+            update_cv.wait(lock, [] { return update_mtx_ready; });
+            update_mtx_ready = false;
+            logger.debug("mutex triggered");
+            sendAll();
+        }
+        logger.debug("exiting update thread");
+    }
+
     void addConnection(websocketpp::connection_hdl hdl)
     {
         // Add connection
@@ -105,22 +124,19 @@ namespace network
     void start_server()
     {
         // Start server
+        logger.debug("starting ws server");
         try
         {
+            stopThread = false;
+            update_thread = std::thread(update_thread_function);
+            logger.debug("thread should run now");
+
             srv.start_accept();
             srv.run();
-            stopThread = false;
-            update_thread = std::thread([]()
-                                        {
-                while (!stopThread){
-                    logger.debug("Sending messages");
-                    sendAll();
-                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
-                } });
         }
         catch (const std::exception &e)
         {
-            std::cout << e.what() << std::endl;
+            logger.error(e.what());
         }
     }
 
@@ -144,7 +160,7 @@ namespace network
     {
         messages.push_back(msg);
         logger.debug("Adding message to queue, " + std::to_string(messages.size()) + " in queue");
-        sendAll();
+        parseMutex();
     }
 
     std::string convertMessages()
@@ -180,9 +196,24 @@ namespace network
         }
     }
 
+    void parseMutex() {
+        if (canSendMessages()) {
+            logger.debug("mutex notify");
+            std::lock_guard<std::mutex> lock(update_mutex);
+            update_mtx_ready = true;
+            update_cv.notify_one();
+        }
+    }
+
+
     bool canAcceptMessages()
     {
         return connections.size() > 0;
     }
+
+    bool canSendMessages() {
+        return messages.size() > 0;
+    }
+
 
 }

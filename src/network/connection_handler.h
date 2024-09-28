@@ -8,6 +8,7 @@
 #include <vector>
 #include <websocketpp/config/asio_no_tls.hpp>
 #include <websocketpp/server.hpp>
+#include <mutex>
 #include <thread>
 #include "settings.h"
 #include "connection.h"
@@ -40,7 +41,9 @@ namespace network{
     void stop_server();
     void addMessage(message msg);
     void sendAll();
+    void parseMutex();
     bool canAcceptMessages();
+    bool canSendMessages();
 }
 
 #endif //CONNECTION_HANDLER_H
